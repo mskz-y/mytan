@@ -27,6 +27,29 @@ function shuffle(arr) {
   return a;
 }
 
+// 出題順: 最初から / ランダム(全件) / ランダムで指定数だけ出題して終了
+const ORDER_OPTS = [
+  ['seq', '最初から'],
+  ['rand', 'ランダム'],
+  ['rand50', 'ランダム50個'],
+  ['rand100', 'ランダム100個'],
+];
+const ORDER_LIMIT = { rand50: 50, rand100: 100 };
+
+function buildList(words, order) {
+  if (!ORDER_OPTS.some(([v]) => v === order) || order === 'seq') return words.slice();
+  const list = shuffle(words);
+  return ORDER_LIMIT[order] ? list.slice(0, ORDER_LIMIT[order]) : list;
+}
+
+function orderRadios(current) {
+  if (!ORDER_OPTS.some(([v]) => v === current)) current = 'seq';
+  return ORDER_OPTS.map(
+    ([v, label]) =>
+      `<label class="opt"><input type="radio" name="order" value="${v}" ${v === current ? 'checked' : ''}><span>${label}</span></label>`,
+  ).join('');
+}
+
 const settings = {
   get(key, def) {
     try {
@@ -529,7 +552,7 @@ async function viewFlash(p) {
       <div class="muted">${esc(target.title)} ・ ${target.words.length}語</div>
     </div>
     <div class="card settings">
-      <div class="set-row"><div class="set-label">順番</div><div class="seg-opts">${radio('order', 'seq', '最初から')}${radio('order', 'rand', 'ランダム')}</div></div>
+      <div class="set-row"><div class="set-label">順番</div><div class="seg-opts">${orderRadios(opt.order)}</div></div>
       <div class="set-row"><div class="set-label">読み上げ</div><div class="seg-opts">${radio('speech', true, 'ON')}${radio('speech', false, 'OFF')}</div></div>
       <div class="set-row"><div class="set-label">表示</div><div class="seg-opts">${radio('timing', 3, '3秒')}${radio('timing', 5, '5秒')}${radio('timing', 10, '10秒')}${radio('timing', 0, '手動めくり')}</div></div>
       ${'speechSynthesis' in window ? '' : '<div class="notice warn">このブラウザは読み上げに対応していません。</div>'}
@@ -551,7 +574,7 @@ async function viewFlash(p) {
 }
 
 function runFlash(target, dir, opt, menuHref, modeName) {
-  const list = opt.order === 'rand' ? shuffle(target.words) : target.words.slice();
+  const list = buildList(target.words, opt.order);
   let idx = 0;
   let phase = 0; // 0: 問題面, 1: 答え面
   let timer = null;
@@ -726,8 +749,7 @@ async function viewType(p) {
     </div>
     <div class="card settings">
       <div class="set-row"><div class="set-label">順番</div><div class="seg-opts">
-        <label class="opt"><input type="radio" name="order" value="seq" ${order === 'seq' ? 'checked' : ''}><span>最初から</span></label>
-        <label class="opt"><input type="radio" name="order" value="rand" ${order === 'rand' ? 'checked' : ''}><span>ランダム</span></label>
+        ${orderRadios(order)}
       </div></div>
       <button class="btn primary big" id="start" ${target.words.length ? '' : 'disabled'}>スタート</button>
     </div>
@@ -741,7 +763,7 @@ async function viewType(p) {
 }
 
 function runType(target, order, menuHref) {
-  const list = order === 'rand' ? shuffle(target.words) : target.words.slice();
+  const list = buildList(target.words, order);
   let idx = 0;
   let pos = 0;
   let miss = 0;
