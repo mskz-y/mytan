@@ -1,0 +1,44 @@
+# 依存パッケージ（npm install で再生成）
+node_modules/
+
+# ビルド成果物（npm run build で再生成）
+dist/
+dist-ssr/
+*.local
+
+# Vite のキャッシュ
+.vite/
+
+# 開発仕様書
+開発仕様.md
+
+# 単語データ（アプリにアップロードして使う個人データ）
+*.tsv
+*.csv
+
+# ログ
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# 環境変数
+.env
+.env.*
+!.env.example
+
+# エディタ・IDE
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.swp
+*.suo
+*.sln
+*.sw?
+
+# OS が作るファイル
+.DS_Store
+Thumbs.db
+Desktop.ini
