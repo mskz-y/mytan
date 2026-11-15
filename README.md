@@ -3,6 +3,10 @@
 単語ファイル（TSV/CSV）をアップロードして使う、ブラウザ完結型の英単語帳アプリです。
 データはブラウザの IndexedDB に保存され、サーバーへは送信されません。
 
+**公開URL: https://mskz-y.github.io/mytan/**
+
+`master` ブランチへの push で GitHub Actions によりビルドされ、GitHub Pages に自動デプロイされます。
+
 ## 使い方
 
 ```bash
