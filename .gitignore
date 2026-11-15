@@ -15,6 +15,7 @@ dist-ssr/
 # 単語データ（アプリにアップロードして使う個人データ）
 *.tsv
 *.csv
+!sample.tsv
 
 # ログ
 logs/
